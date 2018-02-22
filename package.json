@@ -1,15 +1,28 @@
 {
   "name": "gitlab-toggl-timer",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A simple command line utility to start and stop a timer for your current merge request. Also report time spent to your gitlab issue.",
+  "bin": {
+    "gitlab-toggl-timer": "index.js"
+  },
   "scripts": {
+    "start": "node index.js start",
+    "stop": "node index.js stop",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "gitlab",
+    "toggl",
+    "timer"
+  ],
   "author": "Pierre-Luc Pelletier <polopelletier@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "git-controller": "^1.0.5"
+    "chalk": "^2.3.1",
+    "git-controller": "^1.0.5",
+    "inquirer": "3.3.0",
+    "moment": "^2.20.1",
+    "toggl-api": "^1.0.1",
+    "yargs": "^11.0.0"
   }
 }
