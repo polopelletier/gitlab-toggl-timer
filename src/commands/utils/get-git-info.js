@@ -1,3 +1,5 @@
+/* globals exitWithError */
+
 const git = require("git-controller")(process.cwd());
 
 const ISSUE_ID_REGEXP = /^(\d+)-/;
@@ -6,11 +8,11 @@ const PROJECT_NAME_REGEXP = /^(http(?:s)?):\/\/([\w.]+)\/(.*\/*.)\.git$/;
 function getFeatureName(){
 	const branches = git.getBranchesSync(); 
 	if(!branches || !branches.current){
-		throw new Error("Could not load branches");
+		exitWithError("Error: Could not load branches");
 	}
 
 	if(branches.current == "master"){
-		throw new Error("Cannot track time on branch 'master'");
+		exitWithError("Error: Cannot track time on branch 'master'");
 	}
 
 	return branches.current;
@@ -20,7 +22,7 @@ function getIssueId(featureName){
 	const matches = ISSUE_ID_REGEXP.exec(featureName);
 	
 	if(!matches || !matches[1]){
-		throw new Error(`Branch name '${featureName}' could not be parsed properly`);
+		exitWithError(`Error: Branch name '${featureName}' could not be parsed properly`);
 	}
 
 	return Number(matches[1]);
@@ -29,17 +31,17 @@ function getIssueId(featureName){
 function getRemote(remoteName){
 	const remotes = git.getRemotesSync();
 	if(!remotes){
-		throw new Error("Could not load remotes");
+		exitWithError("Error: Could not load remotes");
 	}
 
 	if(!remotes[remoteName]){
-		throw new Error(`Could not find remote '${remoteName}'`);
+		exitWithError(`Error: Could not find remote '${remoteName}'`);
 	}
 
 	const url = remotes[remoteName];
 	const matches = PROJECT_NAME_REGEXP.exec(url);
 	if(!matches || !matches[1] || !matches[2] || !matches[3]){
-		throw new Error(`Url '${url}' could not be parsed properly`);
+		exitWithError(`Error: Url '${url}' could not be parsed properly`);
 	}
 	
 	return {

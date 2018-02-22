@@ -17,7 +17,7 @@ module.exports = function(){
 			const content = fs.readFileSync(FILENAME);
 
 			try {
-				config = JSON.parse(content);				
+				config = JSON.parse(content);
 			}catch(err){
 				reject(err);
 			}
@@ -83,10 +83,10 @@ const QUESTIONS = [
 						path: "/api/v4/version"
 					},
 					function(response){
-						if(response.error){
-							reject("Token is invalid: " + response.error);
-						}else if(response.message){
-							reject("Token is invalid: " + response.message);
+						testingTokenDone();
+
+						if(response.error || response.message){
+							reject("Token is invalid: unauthorized");
 						}else{
 							resolve(true);
 						}
@@ -109,9 +109,11 @@ const QUESTIONS = [
 				const toggl = new TogglClient({
 					apiToken: token
 				});
-				toggl.getWorkspaces(function(err, workspaces){
+				toggl.getWorkspaces(function(err){
+					testingTokenDone();
+
 					if(err){
-						reject("Token is invalid: ", err.message || err);
+						reject("Token is invalid: unauthorized");
 					}else{
 						resolve(true);
 					}
@@ -121,7 +123,31 @@ const QUESTIONS = [
 	}
 ];
 
+const SPINNER = [
+	"   ",
+	".  ",
+	".. ",
+	"..."
+];
+
+const ui = new inquirer.ui.BottomBar();
+
+var spinnerIntervalIndex;
 function logIsTestingToken(){
-	console.log("");
-	console.log("Sending test request to validate token. Please wait...");
+	var i = 0;
+	function updateText(){
+		const spinner = SPINNER[i % SPINNER.length];
+		ui.updateBottomBar(`Sending test request to validate token\nPlease wait ${spinner}`);
+	}
+
+	updateText();
+	spinnerIntervalIndex = setInterval(function(){
+		i++;
+		updateText();
+	}, 200);
+}
+
+function testingTokenDone(){
+	clearInterval(spinnerIntervalIndex);
+	ui.updateBottomBar("");
 }
