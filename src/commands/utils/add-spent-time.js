@@ -17,13 +17,11 @@ module.exports = function(config, project, feature, duration){
 	
 	gitlabRequest(config, options, function(response){
 		if(response.error || response.message){
-			exitWithError(response.error || response.message);
+			exitWithError("[GITLAB]", `Failed to add spent time to gitlab issue #${issueId}.`, (response.error || response.message));
 		}
 
-		console.log(`Failed to add spent time to gitlab issue #${issueId}`);
-
-		console.log("Time spent:", duration);
-		console.log("Estimate:", response.human_time_estimate);
+		columns("Time spent:      ", duration);
+		columns("Estimate:        ", response.human_time_estimate);
 
 		var c = chalk.green;
 		const spent = response.total_time_spent;
@@ -33,6 +31,10 @@ module.exports = function(config, project, feature, duration){
 		} else if(spent / estimated > 0.8) {
 			c = chalk.yellow;
 		}
-		console.log("Total time spent:", c(response.human_total_time_spent));
-	})
+		columns("Total time spent:", c(response.human_total_time_spent));
+	});
 };
+
+function columns(header, content){
+	console.log(chalk.bold(header), content);
+}

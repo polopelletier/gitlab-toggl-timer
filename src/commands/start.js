@@ -12,7 +12,7 @@ module.exports = function(config, args){
 
 	toggl.getCurrentTimeEntry(function(err, entry) {
 		if(entry != null){
-			exitWithError(`Error: A task is currently in progress: ${entry.description}`);
+			exitWithError(`A task is currently in progress: ${entry.description}.`);
 		}
 
 		findProjectId(toggl, gitInfo.projectName, function(pid){
@@ -21,9 +21,9 @@ module.exports = function(config, args){
 				pid: pid
 			}, function(err, entry){
 				if(err){
-					exitWithError(err);
+					exitWithError("[TOGGL]", err);
 				}
-				console.log(`[${entry.start}] Started working on '${entry.description}'`);
+				console.log(`${entry.start} - Started working on '${entry.description}'.`);
 			});
 		});
 	});

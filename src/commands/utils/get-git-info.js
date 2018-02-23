@@ -8,11 +8,11 @@ const PROJECT_NAME_REGEXP = /^(http(?:s)?):\/\/([\w.]+)\/(.*\/*.)\.git$/;
 function getFeatureName(){
 	const branches = git.getBranchesSync(); 
 	if(!branches || !branches.current){
-		exitWithError("Error: Could not load branches");
+		exitWithError("[GIT]", "Could not load branches.");
 	}
 
 	if(branches.current == "master"){
-		exitWithError("Error: Cannot track time on branch 'master'");
+		exitWithError("Cannot track time on branch 'master'.");
 	}
 
 	return branches.current;
@@ -22,7 +22,7 @@ function getIssueId(featureName){
 	const matches = ISSUE_ID_REGEXP.exec(featureName);
 	
 	if(!matches || !matches[1]){
-		exitWithError(`Error: Branch name '${featureName}' could not be parsed properly`);
+		exitWithError(`Could not get issue id from branch name '${featureName}'.`);
 	}
 
 	return Number(matches[1]);
@@ -31,17 +31,17 @@ function getIssueId(featureName){
 function getRemote(remoteName){
 	const remotes = git.getRemotesSync();
 	if(!remotes){
-		exitWithError("Error: Could not load remotes");
+		exitWithError("[GIT]", "Could not load remotes.");
 	}
 
 	if(!remotes[remoteName]){
-		exitWithError(`Error: Could not find remote '${remoteName}'`);
+		exitWithError("[GIT]", `Could not find remote '${remoteName}'.`);
 	}
 
 	const url = remotes[remoteName];
 	const matches = PROJECT_NAME_REGEXP.exec(url);
 	if(!matches || !matches[1] || !matches[2] || !matches[3]){
-		exitWithError(`Error: Url '${url}' could not be parsed properly`);
+		exitWithError(`Could not find GitLab namespace/project from url '${url}'.`);
 	}
 	
 	return {
