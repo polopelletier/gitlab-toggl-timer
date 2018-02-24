@@ -5,6 +5,7 @@ const TogglClient = require("toggl-api");
 
 const getGitInfo = require("./utils/get-git-info");
 const addSpentTime = require("./utils/add-spent-time");
+const formatTime = require("./utils/format-time");
 
 module.exports = function(config, args){
 	const toggl = new TogglClient(config.toggl);
@@ -33,9 +34,12 @@ module.exports = function(config, args){
 				const duration = moment.duration(doneEntry.duration, "seconds")
 					.toISOString().split("T")[1]
 					.toLowerCase();
-				console.log(`Stopped working on '${doneEntry.description}'.`);
 
-				addSpentTime(config.gitlab, gitInfo.projectName, gitInfo.featureName, duration);
+				console.log(`${formatTime(doneEntry.stop)} - Stopped working on '${doneEntry.description}'.`);
+
+				addSpentTime(config.gitlab, gitInfo.projectName, gitInfo.featureName, duration, function(){
+					process.exit();
+				});
 			});
 		});
 	});

@@ -5,7 +5,7 @@ const chalk = require("chalk");
 
 const gitlabRequest = require("../../gitlab-request");
 
-module.exports = function(config, project, feature, duration){
+module.exports = function(config, project, feature, duration, onComplete){
 	
 	const issueId = feature.split("-")[0];
 	project = querystring.escape(project);
@@ -23,15 +23,17 @@ module.exports = function(config, project, feature, duration){
 		columns("Time spent:      ", duration);
 		columns("Estimate:        ", response.human_time_estimate);
 
-		var c = chalk.green;
+		var c = chalk.greenBright;
 		const spent = response.total_time_spent;
 		const estimated = response.time_estimate;
 		if(spent > estimated){
-			c = chalk.red;
+			c = chalk.redBright;
 		} else if(spent / estimated > 0.8) {
-			c = chalk.yellow;
+			c = chalk.yellowBright;
 		}
 		columns("Total time spent:", c(response.human_total_time_spent));
+
+		onComplete();
 	});
 };
 

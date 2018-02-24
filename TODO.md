@@ -1,6 +1,6 @@
-TODO:
-Git config aliases
-*Report
-README > Gramarly
-Publish
-Backup scripts
+# TODO
+- Report
+- Project specific config
+- README > Gramarly
+- Better error handling
+- Cleanup
