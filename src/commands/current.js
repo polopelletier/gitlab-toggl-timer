@@ -26,7 +26,7 @@ module.exports = function(config, args){
 		const start = moment(entry.start);
 
 		console.log(`Current time entry is '${entry.description}'`);
-		console.log(`Started at ${start.calendar()}`);
+		console.log("Started", start.calendar());
 		
 		const diff = moment().diff(start);
 		const duration = moment.duration(Math.round(diff/1000), "seconds")
