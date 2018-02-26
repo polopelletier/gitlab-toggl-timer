@@ -4,7 +4,7 @@ const TogglClient = require("toggl-api");
 
 const getGitInfo = require("./utils/get-git-info");
 const findProjectId = require("./utils/find-project-id");
-const formatTime = require("./utils/format-time");
+const moment = require("moment")
 
 module.exports = function(config, args){
 	const toggl = new TogglClient(config.toggl);
@@ -24,7 +24,7 @@ module.exports = function(config, args){
 				if(err){
 					exitWithError("[TOGGL]", err);
 				}
-				console.log(`${formatTime(entry.start)} - Started working on '${entry.description}'.`);
+				console.log(`${moment(entry.start).calendar()} - Started working on '${entry.description}'.`);
 				process.exit();
 			});
 		});

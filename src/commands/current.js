@@ -4,8 +4,6 @@ const moment = require("moment");
 const TogglClient = require("toggl-api");
 
 const getGitInfo = require("./utils/get-git-info");
-const addSpentTime = require("./utils/add-spent-time");
-const formatTime = require("./utils/format-time");
 
 module.exports = function(config, args){
 	const toggl = new TogglClient(config.toggl);
@@ -28,7 +26,7 @@ module.exports = function(config, args){
 		const start = moment(entry.start);
 
 		console.log(`Current time entry is '${entry.description}'`);
-		console.log(`Started at ${start}`);
+		console.log(`Started at ${start.calendar()}`);
 		
 		const diff = moment().diff(start);
 		const duration = moment.duration(Math.round(diff/1000), "seconds")
